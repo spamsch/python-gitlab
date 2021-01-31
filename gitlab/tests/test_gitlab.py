@@ -21,7 +21,7 @@ import pickle
 import pytest
 from httmock import HTTMock, response, urlmatch, with_httmock  # noqa
 
-from gitlab import Gitlab, GitlabList, USER_AGENT
+from gitlab import Gitlab, GitlabList, DEFAULT_URL, USER_AGENT
 from gitlab.v4.objects import CurrentUser
 
 
@@ -126,6 +126,11 @@ def test_gitlab_token_auth(gl, callback=None):
     assert gl.user.username == username
     assert gl.user.id == user_id
     assert isinstance(gl.user, CurrentUser)
+
+
+def test_gitlab_default_url():
+    gl = Gitlab()
+    assert gl.url == DEFAULT_URL
 
 
 def test_gitlab_from_config(default_config):

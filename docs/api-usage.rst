@@ -7,13 +7,22 @@ python-gitlab only supports GitLab APIs v4.
 ``gitlab.Gitlab`` class
 =======================
 
-To connect to a GitLab server, create a ``gitlab.Gitlab`` object:
+To connect to GitLab.com or another GitLab server, create a ``gitlab.Gitlab`` object:
 
 .. code-block:: python
 
    import gitlab
 
-   # private token or personal token authentication
+   # anonymous read-only access for public resources (GitLab.com)
+   gl = gitlab.Gitlab()
+
+   # anonymous read-only access for public resources (self-hosted GitLab instance)
+   gl = gitlab.Gitlab('http://10.0.0.1')
+
+   # private token or personal token authentication (GitLab.com)
+   gl = gitlab.Gitlab(private_token='JVNSESs8EwWRx5yDxM5q')
+
+   # private token or personal token authentication (self-hosted GitLab instance)
    gl = gitlab.Gitlab('http://10.0.0.1', private_token='JVNSESs8EwWRx5yDxM5q')
 
    # oauth token authentication
@@ -22,12 +31,6 @@ To connect to a GitLab server, create a ``gitlab.Gitlab`` object:
    # job token authentication (to be used in CI)
    import os
    gl = gitlab.Gitlab('http://10.0.0.1', job_token=os.environ['CI_JOB_TOKEN'])
-
-   # anonymous gitlab instance, read-only for public resources
-   gl = gitlab.Gitlab('http://10.0.0.1')
-
-   # Define your own custom user agent for requests
-   gl = gitlab.Gitlab('http://10.0.0.1', user_agent='my-package/1.0.0')
 
    # make an API request to create the gl.user object. This is mandatory if you
    # use the username/password authentication.

@@ -52,7 +52,7 @@ class Gitlab(object):
     """Represents a GitLab server connection.
 
     Args:
-        url (str): The URL of the GitLab server.
+        url (str): The URL of the GitLab server (defaults to https://gitlab.com).
         private_token (str): The user private token
         oauth_token (str): An oauth token
         job_token (str): A CI job token
@@ -70,7 +70,7 @@ class Gitlab(object):
 
     def __init__(
         self,
-        url,
+        url=DEFAULT_URL,
         private_token=None,
         oauth_token=None,
         job_token=None,
