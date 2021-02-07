@@ -70,7 +70,7 @@ class Gitlab(object):
 
     def __init__(
         self,
-        url=DEFAULT_URL,
+        url=None,
         private_token=None,
         oauth_token=None,
         job_token=None,
@@ -88,7 +88,7 @@ class Gitlab(object):
 
         self._api_version = str(api_version)
         self._server_version = self._server_revision = None
-        self._base_url = url.rstrip("/")
+        self._base_url = self._get_base_url(url)
         self._url = "%s/api/v%s" % (self._base_url, api_version)
         #: Timeout to use for requests to gitlab server
         self.timeout = timeout
@@ -408,6 +408,19 @@ class Gitlab(object):
             "timeout": self.timeout,
             "verify": self.ssl_verify,
         }
+
+    def _get_base_url(self, url):
+        """Return the base URL with the trailing slash stripped.
+
+        If the URL is a Falsy value, return the default URL.
+
+        Returns:
+            str: The base URL
+        """
+        if not url:
+            return DEFAULT_URL
+
+        return url.rstrip("/")
 
     def _build_url(self, path):
         """Returns the full url from path.
