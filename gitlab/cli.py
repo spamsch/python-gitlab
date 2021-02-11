@@ -20,6 +20,7 @@
 import argparse
 import functools
 import importlib
+import os
 import re
 import sys
 
@@ -87,17 +88,22 @@ def _get_base_parser(add_help=True):
         "-v",
         "--verbose",
         "--fancy",
-        help="Verbose mode (legacy format only)",
+        help="Verbose mode (legacy format only) [env var: GITLAB_VERBOSE]",
         action="store_true",
+        default=os.getenv("GITLAB_VERBOSE"),
     )
     parser.add_argument(
-        "-d", "--debug", help="Debug mode (display HTTP requests)", action="store_true"
+        "-d",
+        "--debug",
+        help="Debug mode (display HTTP requests) [env var: GITLAB_DEBUG]",
+        action="store_true",
+        default=os.getenv("GITLAB_DEBUG"),
     )
     parser.add_argument(
         "-c",
         "--config-file",
         action="append",
-        help="Configuration file to use. Can be used multiple times.",
+        help="Configuration file to use. Can be used multiple times. [env var: PYTHON_GITLAB_CFG]",
     )
     parser.add_argument(
         "-g",
@@ -126,7 +132,86 @@ def _get_base_parser(add_help=True):
         ),
         required=False,
     )
-
+    # TODO: deduplicate everything by providing some data struct to loop over
+    parser.add_argument(
+        "--url",
+        help=("GitLab server URL [env var: GITLAB_URL]"),
+        required=False,
+        default=os.getenv("GITLAB_URL"),
+    )
+    parser.add_argument(
+        "--private-token",
+        help=("GitLab private token [env var: GITLAB_PRIVATE_TOKEN]"),
+        required=False,
+        default=os.getenv("GITLAB_PRIVATE_TOKEN"),
+    )
+    parser.add_argument(
+        "--oauth-token",
+        help=("GitLab OAuth token [env var: GITLAB_OAUTH_TOKEN]"),
+        required=False,
+        default=os.getenv("GITLAB_OAUTH_TOKEN"),
+    )
+    parser.add_argument(
+        "--job-token",
+        help=(
+            "GitLab CI job token. Explicitly providing this is usually not needed.\n"
+            "[env var, only if explicitly overriding CI_JOB_TOKEN: GITLAB_JOB_TOKEN]"
+        ),
+        required=False,
+        default=os.getenv("GITLAB_JOB_TOKEN"),
+    )
+    parser.add_argument(
+        "--ssl-verify",
+        help=(
+            "Whether SSL certificates should be validated. [env var: GITLAB_SSL_VERIFY]"
+        ),
+        required=False,
+        default=os.getenv("GITLAB_SSL_VERIFY"),
+    )
+    parser.add_argument(
+        "--timeout",
+        help=(
+            "Timeout to use for requests to the GitLab server. [env var: GITLAB_TIMEOUT]"
+        ),
+        required=False,
+        default=os.getenv("GITLAB_TIMEOUT"),
+    )
+    parser.add_argument(
+        "--api-version",
+        help=("GitLab API version [env var: GITLAB_API_VERSION]"),
+        required=False,
+        default=os.getenv("GITLAB_API_VERSION"),
+    )
+    parser.add_argument(
+        "--per-page",
+        help=(
+            "Number of entries to return per page in the response. [env var: GITLAB_PER_PAGE]"
+        ),
+        required=False,
+        default=os.getenv("GITLAB_PER_PAGE"),
+    )
+    parser.add_argument(
+        "--pagination",
+        help=(
+            "Whether to use keyset or offset pagination [env var: GITLAB_PAGINATION]"
+        ),
+        required=False,
+        default=os.getenv("GITLAB_PAGINATION"),
+    )
+    parser.add_argument(
+        "--order-by",
+        help=("Set order_by globally [env var: GITLAB_ORDER_BY]"),
+        required=False,
+        default=os.getenv("GITLAB_ORDER_BY"),
+    )
+    parser.add_argument(
+        "--user-agent",
+        help=(
+            "The user agent to send to GitLab with the HTTP request. [env var: GITLAB_USER_AGENT]"
+        ),
+        required=False,
+        default=os.getenv("GITLAB_USER_AGENT"),
+    )
     return parser
 
 
@@ -220,7 +305,7 @@ def main():
     args = {k: _parse_value(v) for k, v in args.items() if v is not None}
 
     try:
-        gl = gitlab.Gitlab.from_config(gitlab_id, config_files)
+        gl = gitlab.Gitlab.merge_config(options, gitlab_id, config_files)
         if gl.private_token or gl.oauth_token or gl.job_token:
             gl.auth()
     except Exception as e:
