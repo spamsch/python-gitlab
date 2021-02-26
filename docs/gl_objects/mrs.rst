@@ -190,8 +190,8 @@ Reference
 
 * v4 API:
 
-  + :class:`gitlab.v4.objects.MergeRequestPipeline`
-  + :class:`gitlab.v4.objects.MergeRequestPipelineManager`
+  + :class:`gitlab.v4.objects.ProjectMergeRequestPipeline`
+  + :class:`gitlab.v4.objects.ProjectMergeRequestPipelineManager`
   + :attr:`gitlab.v4.objects.ProjectMergeRequest.pipelines`
 
 * GitLab API: https://docs.gitlab.com/ee/api/merge_requests.html#list-mr-pipelines

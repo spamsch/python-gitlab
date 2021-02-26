@@ -6,7 +6,7 @@ import re
 import pytest
 import responses
 
-from gitlab.v4.objects import MergeRequestPipeline
+from gitlab.v4.objects import ProjectMergeRequestPipeline
 
 pipeline_content = {
     "id": 1,
@@ -49,18 +49,18 @@ def test_merge_requests_pipelines_deprecated_raises_warning(
         pipelines = project.mergerequests.get(1, lazy=True).pipelines()
 
     assert len(pipelines) == 1
-    assert isinstance(pipelines[0], MergeRequestPipeline)
+    assert isinstance(pipelines[0], ProjectMergeRequestPipeline)
     assert pipelines[0].sha == pipeline_content["sha"]
 
 
 def test_list_merge_requests_pipelines(project, resp_list_merge_request_pipelines):
     pipelines = project.mergerequests.get(1, lazy=True).pipelines.list()
     assert len(pipelines) == 1
-    assert isinstance(pipelines[0], MergeRequestPipeline)
+    assert isinstance(pipelines[0], ProjectMergeRequestPipeline)
     assert pipelines[0].sha == pipeline_content["sha"]
 
 
 def test_create_merge_requests_pipelines(project, resp_create_merge_request_pipeline):
     pipeline = project.mergerequests.get(1, lazy=True).pipelines.create()
-    assert isinstance(pipeline, MergeRequestPipeline)
+    assert isinstance(pipeline, ProjectMergeRequestPipeline)
     assert pipeline.sha == pipeline_content["sha"]

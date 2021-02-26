@@ -17,8 +17,8 @@ from gitlab.mixins import (
 
 
 __all__ = [
-    "MergeRequestPipeline",
-    "MergeRequestPipelineManager",
+    "ProjectMergeRequestPipeline",
+    "ProjectMergeRequestPipelineManager",
     "ProjectPipeline",
     "ProjectPipelineManager",
     "ProjectPipelineJob",
@@ -34,13 +34,13 @@ __all__ = [
 ]
 
 
-class MergeRequestPipeline(RESTObject):
+class ProjectMergeRequestPipeline(RESTObject):
     pass
 
 
-class MergeRequestPipelineManager(CreateMixin, ListMixin, RESTManager):
+class ProjectMergeRequestPipelineManager(CreateMixin, ListMixin, RESTManager):
     _path = "/projects/%(project_id)s/merge_requests/%(mr_iid)s/pipelines"
-    _obj_cls = MergeRequestPipeline
+    _obj_cls = ProjectMergeRequestPipeline
     _from_parent_attrs = {"project_id": "project_id", "mr_iid": "iid"}
     _create_attrs = (tuple(), tuple())
 

@@ -25,7 +25,7 @@ from .events import (
     ProjectMergeRequestResourceLabelEventManager,
     ProjectMergeRequestResourceMilestoneEventManager,
 )
-from .pipelines import MergeRequestPipelineManager
+from .pipelines import ProjectMergeRequestPipelineManager
 
 
 __all__ = [
@@ -120,7 +120,7 @@ class ProjectMergeRequest(
         ("diffs", "ProjectMergeRequestDiffManager"),
         ("discussions", "ProjectMergeRequestDiscussionManager"),
         ("notes", "ProjectMergeRequestNoteManager"),
-        ("pipelines", "MergeRequestPipelineManager"),
+        ("pipelines", "ProjectMergeRequestPipelineManager"),
         ("resourcelabelevents", "ProjectMergeRequestResourceLabelEventManager"),
         ("resourcemilestoneevents", "ProjectMergeRequestResourceMilestoneEventManager"),
     )
