@@ -21,7 +21,7 @@ import argparse
 import functools
 import re
 import sys
-from typing import Any, Callable, Dict, Tuple
+from typing import Any, Callable, Dict, Optional, Tuple
 
 import gitlab.config
 
@@ -36,9 +36,12 @@ custom_actions: Dict[str, Dict[str, Tuple[Tuple[Any, ...], Tuple[Any, ...], bool
 
 
 def register_custom_action(
-    cls_names, mandatory: Tuple[Any, ...] = tuple(), optional: Tuple[Any, ...] = tuple()
+    cls_names,
+    mandatory: Tuple[Any, ...] = tuple(),
+    optional: Tuple[Any, ...] = tuple(),
+    custom_action: Optional[str] = None,
 ) -> Callable:
-    def wrap(f) -> Callable:
+    def wrap(f, custom_action: Optional[str] = custom_action) -> Callable:
         @functools.wraps(f)
         def wrapped_f(*args, **kwargs):
             return f(*args, **kwargs)
@@ -57,7 +60,7 @@ def register_custom_action(
             if final_name not in custom_actions:
                 custom_actions[final_name] = {}
 
-            action = f.__name__.replace("_", "-")
+            action = custom_action or f.__name__.replace("_", "-")
             custom_actions[final_name][action] = (mandatory, optional, in_obj)
 
         return wrapped_f

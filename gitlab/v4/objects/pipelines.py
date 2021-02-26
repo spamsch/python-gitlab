@@ -48,7 +48,7 @@ class MergeRequestPipelineManager(CreateMixin, ListMixin, RESTManager):
     # mr.pipelines(), execute the deprecated method for now.
     # TODO: in python-gitlab 3.0.0, remove this method entirely.
 
-    @cli.register_custom_action("ProjectMergeRequest")
+    @cli.register_custom_action("ProjectMergeRequest", custom_action="pipelines")
     @exc.on_http_error(exc.GitlabListError)
     def __call__(self, **kwargs):
         """List the merge request pipelines.
