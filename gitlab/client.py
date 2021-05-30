@@ -437,8 +437,8 @@ class Gitlab(object):
 
     def _prepare_send_data(
         self,
-        files: Dict[str, Any] = None,
-        post_data: Dict[str, Any] = None,
+        files: Optional[Dict[str, Any]] = None,
+        post_data: Optional[Dict[str, Any]] = None,
         raw: Optional[bool] = False,
     ) -> Tuple:
         if files:
